@@ -1,6 +1,12 @@
 #fb-info-parser
+# -*- coding: utf-8 -*-
 import json
 from datetime import datetime
+from collections import Counter
+import sys
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 #opens file and turns json into dict
 def getJson(filepath):
@@ -14,13 +20,15 @@ def getOther(jsondict):
     for item in jsondict['messages']:
         if item['sender_name'] == fullname:
             messagelist.append(item)
-    return messagelist
+    final = { 'messages' : messagelist }
+    return final
 #returns messages i sent
     messagelist = []
     for item in jsondict['messages']:
         if item['sender_name'] == 'Michael Woon':
             messagelist.append(item)
-    return messagelist
+    final = { 'messages' : messagelist }
+    return final
 #count messages for a person for all time
 def countMessages(jsondict):
     fullname = jsondict['participants'][0]['name']
@@ -62,7 +70,32 @@ def numInWeekday(jsondict,weekdayInt):
 
 #https://docs.python.org/3/library/collections.html#collections.Counter
 #for counting word frequency
-def commonWords(jsondict):
-    return
+def messageString(jsondict):
+    allmessages = ''
+    for item in jsondict['messages']:
+        if 'content' in item:
+            s = item['content'].encode(sys.stdout.encoding, errors='replace')
+            s = s.lower()
+            allmessages += s
+            allmessages += ' '
+    stop_words = set(stopwords.words('english'))
+    stop_words.add('u')
+    stop_words.add('like')
+    stop_words.add('get')
+    stop_words.add('im')
+    stop_words.add("i'm")
+    stop_words.add("lol")
+    stop_words.add("lmao")
+    stop_words.add("ur")
+    stop_words.add("oh")
+    word_tokens = allmessages.split()
+    filtered_sentence = [w for w in word_tokens if not w in stop_words]
+    filtered_sentence = []
+    for w in word_tokens:
+        if w not in stop_words:
+            filtered_sentence.append(w)
+    return filtered_sentence
 
-#testing
+def commonWords(wordlist):
+    commons = Counter(wordlist).most_common(10)
+    return commons

@@ -1,5 +1,4 @@
 #fb-info-parser
-import json
 import matplotlib.pyplot as plt
 import numpy as np
 from main import *
@@ -46,9 +45,23 @@ def makeMonth(filepath):
     ind = np.arange(len(vals))
     plt.bar(ind,vals)
     plt.xticks(ind,('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'))
-    plt.set_title('Number of messages per month')
     plt.show()
     return
-makeMonth('messages/div.json')
 
 #word freq (bar)
+def makeWords(filepath):
+    jsondict = getJson(filepath)
+    str = messageString(jsondict)
+    commons = commonWords(str)
+    vals = []
+    words = []
+    for tup in commons:
+        vals.append(tup[1])
+        words.append(tup[0])
+    ind = np.arange(len(vals))
+    plt.bar(ind,vals)
+    plt.xticks(ind,words)
+    plt.title('Most common words')
+    plt.show()
+    return
+makeWords('messages/tuan.json')
