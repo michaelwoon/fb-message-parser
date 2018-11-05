@@ -4,25 +4,21 @@ import numpy as np
 from main import *
 
 
-#https://matplotlib.org/contents.html
-x = np.arange(4)
-money = [1, 2, 5.5, 3]
-plt.bar(x, money)
-plt.xticks(x, ('One', 'Two', 'Three', 'Four'))
-#plt.show()
-
 ## TODO: make each one have a bar for me and for them
 #graph of ratio me vs them (bar)
 def makeRatio(filepath):
     jsondict = getJson(filepath)
     other = countMessages(jsondict)
     mw = countMW(jsondict)
+    percentthem = getPercentThem(mw,other)
+    mwpercent = 100-percentthem
+    labels = jsondict['participants'][0]['name'],'Michael Woon'
     vals = [other,mw]
-    ind = np.arange(len(vals))
-    plt.bar(ind,vals,color='SkyBlue')
-    plt.xticks(ind, (jsondict['participants'][0]['name'],'Michael Woon'))
-    plt.title('Total messages per person')
-    plt.show()
+    plt.pie(vals,  labels=labels, autopct='%1.1f%%',
+        shadow=False, startangle=90)
+    title = 'Total Messages: ' + str(other+mw)
+    plt.title(title)
+    plt.axis('equal')
     return
 #graph of weekdays (bar)
 def makeWeekday(filepath):
@@ -34,7 +30,6 @@ def makeWeekday(filepath):
     plt.bar(ind,vals,color='SkyBlue')
     plt.xticks(ind,('Mon','Tues','Wed','Thurs','Fri','Sat','Sun'))
     plt.title('Number of messages per weekday')
-    plt.show()
     return
 #graph of months (bar)
 def makeMonth(filepath):
@@ -46,7 +41,6 @@ def makeMonth(filepath):
     plt.bar(ind,vals,color='SkyBlue')
     plt.xticks(ind,('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'))
     plt.title('Number of messages on each weekday')
-    plt.show()
     return
 
 #months with years
@@ -60,10 +54,7 @@ def makeMonyr(filepath):
     plt.bar(ind,vals,color='SkyBlue')
     plt.xticks(ind,keys,rotation='vertical')
     plt.title('Messages on each month')
-    plt.show()
     return
-makeMonyr('messages/div.json')
-
 
 #graph of hours (bar)
 def makeHours(filepath):
@@ -76,18 +67,22 @@ def makeHours(filepath):
     plt.bar(ind,vals,color='SkyBlue')
     plt.xticks(ind,hours)
     plt.title('Number of messages in each hour')
-    plt.show()
     return
 
 #graph all days, count from each day
+#somehow show day with most
 def makeAllDays(filepath):
     jsondict = getJson(filepath)
     days = allDays(jsondict)
-    ind = np.arange(len(days))
-    plt.bar(ind,days,color='SkyBlue')
-    plt.title('Messages on every day')
+    vals = days.values()
+    keys = days.keys()
+    ind = np.arange(len(vals))
+    plt.bar(ind,vals,color='SkyBlue')
+    plt.xlabel('Number of days')
+    plt.title('Messages on each day')
     plt.show()
     return
+
 
 #word freq (bar)
 def makeWords(filepath):
@@ -103,5 +98,27 @@ def makeWords(filepath):
     plt.bar(ind,vals,color='SkyBlue')
     plt.xticks(ind,words)
     plt.title('Most common words')
+    return
+
+#make all plots at once
+#TODO change window title
+def allPlots(filepath):
+    plt.subplot(1,2,1)
+    makeRatio(filepath)
+    plt.subplot(1,2,2)
+    makeMonyr(filepath)
+    plt.show()
+    plt.subplot(1,2,1)
+    makeWeekday(filepath)
+    plt.subplot(1,2,2)
+    makeHours(filepath)
+    plt.show()
+    plt.subplot(1,1,1)
+    makeAllDays(filepath)
+    plt.show()
+    plt.subplot(1,1,1)
+    makeWords(filepath) #keeps showing on new page
     plt.show()
     return
+
+allPlots('messages/hn.json')

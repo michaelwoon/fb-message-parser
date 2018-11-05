@@ -80,23 +80,20 @@ def numInHour(jsondict,hourInt):
 
 #num on each day, returns list of all day counts
 #needs editing to insert zeros for missed days
-#make into dictionary where keys are dates
+#https://docs.python.org/3/library/collections.html#collections.OrderedDict
 def allDays(jsondict):
-    days = []
-    days.append(0)
-    first = jsondict['messages'][0]
-    ts = int(first['timestamp_ms']/1000)
-    date = datetime.fromtimestamp(ts)
-    current = date.day
+    days = {}
     for item in jsondict['messages']:
         ts = int(item['timestamp_ms']/1000)
         date = datetime.fromtimestamp(ts)
-        if date.day == current:
-            days[-1] += 1
+        daystr = date.isoformat()[0:10]
+        if daystr in days:
+            days[daystr] += 1
         else:
-            days.append(1)
-        current = date.day
+            days[daystr] = 1
     return days
+# dic = getJson('messages/div.json')
+# print(allDays(dic))
 
 #returns number of messages on each month/year, dict
 #add handling for dates with zero
@@ -114,8 +111,6 @@ def monthYear(jsondict):
             dates[datestr] = 1
     return dates
 
-# dic = getJson('messages/div.json')
-# print(monthYear(dic))
 
 #https://docs.python.org/3/library/collections.html#collections.Counter
 #for counting word frequency
