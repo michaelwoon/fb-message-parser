@@ -121,4 +121,4 @@ def allPlots(filepath):
     plt.show()
     return
 
-allPlots('messages/hn.json')
+# allPlots('messages/hle.json')
