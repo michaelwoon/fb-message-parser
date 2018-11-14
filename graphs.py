@@ -120,5 +120,3 @@ def allPlots(filepath):
     makeWords(filepath) #keeps showing on new page
     plt.show()
     return
-
-# allPlots('messages/hle.json')

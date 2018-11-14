@@ -13,6 +13,13 @@ def getJson(filepath):
     with open(filepath, 'r') as f:
         jsondict = json.load(f)
     return jsondict
+#gets list of only messages to be analyzed with sentiment
+def onlyMessages(jsondict):
+    messagelist = []
+    for item in jsondict['messages']:
+        if 'content' in item:
+            messagelist.append(item['content'])
+    return messagelist
 #returns dict of other persons messages
 def getOther(jsondict):
     messagelist = []
@@ -92,8 +99,6 @@ def allDays(jsondict):
         else:
             days[daystr] = 1
     return days
-# dic = getJson('messages/div.json')
-# print(allDays(dic))
 
 #returns number of messages on each month/year, dict
 #add handling for dates with zero
@@ -110,7 +115,6 @@ def monthYear(jsondict):
         else:
             dates[datestr] = 1
     return dates
-
 
 #https://docs.python.org/3/library/collections.html#collections.Counter
 #for counting word frequency
@@ -143,9 +147,3 @@ def messageString(jsondict):
 def commonWords(wordlist):
     commons = Counter(wordlist).most_common(20)
     return commons
-
-# fix monYr and alldays
-# day with most - similar to alldays
-# week/year
-# multiple graphs in one
-# https://www.nltk.org/

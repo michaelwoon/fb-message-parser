@@ -1,6 +1,5 @@
 from graphs import *
 
-#add rest of commands
 command = ""
 while True:
     command = raw_input("Enter a command: ")
