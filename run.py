@@ -1,4 +1,5 @@
 from graphs import *
+from sentiment import *
 
 command = ""
 while True:
@@ -7,7 +8,7 @@ while True:
         break;
     name = raw_input("Enter a filename (no .json): ")
     filepath = "messages/" + name + ".json"
-    if command == "all":
+    if command == "allplots":
         allPlots(filepath)
     if command == "ratio":
         makeRatio(filepath)
@@ -30,3 +31,5 @@ while True:
     if command == "words":
         makeWords(filepath)
         plt.show()
+    if command == "sentiment":
+        sentiment(filepath,name)
